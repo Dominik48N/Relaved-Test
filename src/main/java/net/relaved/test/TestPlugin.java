@@ -1,15 +1,19 @@
 package net.relaved.test;
 
 import lombok.Getter;
+import net.relaved.test.config.MessageHandler;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * Created by Dominik48N on 29.01.2021
  */
+@Getter
 public class TestPlugin extends JavaPlugin {
 
     @Getter private static TestPlugin instance;
+
+    private MessageHandler messageHandler;
 
     @Override
     public void onLoad() {
@@ -18,6 +22,10 @@ public class TestPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+
+        // Load all messages
+        this.messageHandler = new MessageHandler( this );
+        this.messageHandler.loadMessages();
 
         // Register all commands and listeners
         this.registerListeners();

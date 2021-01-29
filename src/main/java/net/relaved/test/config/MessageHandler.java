@@ -1,7 +1,9 @@
 package net.relaved.test.config;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -12,12 +14,15 @@ import org.bukkit.plugin.Plugin;
  */
 public class MessageHandler {
 
+    private final Map< String, List< String > > messageListCache;
     private final Map< String, String > messageCache;
 
     private final YamlConfiguration yamlConfiguration;
 
     public MessageHandler( final Plugin plugin ) {
         this.messageCache = Maps.newConcurrentMap();
+        this.messageListCache = Maps.newConcurrentMap();
+
         this.yamlConfiguration = this.mkdirs( plugin );
     }
 
@@ -28,8 +33,14 @@ public class MessageHandler {
         final String prefix = ChatColor.translateAlternateColorCodes( '&', this.yamlConfiguration.getString( "prefix" ) );
 
         for ( final String key : this.yamlConfiguration.getKeys( true ) ) {
-            this.messageCache.put( key, ChatColor.translateAlternateColorCodes( '&', this.yamlConfiguration.getString( key )
-                    .replace( "{0}", prefix ) ) );
+
+            if ( this.yamlConfiguration.isString( key ) ) {
+                this.messageCache.put( key, ChatColor.translateAlternateColorCodes( '&', this.yamlConfiguration.getString( key )
+                        .replace( "{0}", prefix ) ) );
+                continue;
+            }
+
+            if ( this.yamlConfiguration.isList( key ) ) this.messageListCache.put( key, this.yamlConfiguration.getStringList( key ) );
         }
 
     }
@@ -55,6 +66,19 @@ public class MessageHandler {
         }
 
         return message;
+    }
+
+    /**
+     * Returns a cached message by the specific key
+     *
+     * @param key the message list key
+     *
+     * @return the message list
+     */
+    public List< String > getList( final String key ) {
+        final List< String > list = this.messageListCache.get( key );
+
+        return list == null ? Lists.newArrayList() : list;
     }
 
     private YamlConfiguration mkdirs( final Plugin plugin ) {

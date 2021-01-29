@@ -6,4 +6,6 @@ prefix: "&8[&aTestPlugin&8] &7"
 scoreboard:
   display_name: "&aTest&8-&aScoreboard"
   lines:
-    - ""
+    - " "
+    - "&7Name&8:"
+    - " &8> &e{0}"

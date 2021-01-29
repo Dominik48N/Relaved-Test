@@ -54,18 +54,20 @@ public class MessageHandler {
      * @return the replaced message
      */
     public String getMessage( final String key, final Object... replacements ) {
-        String message = this.messageCache.get( key );
+        synchronized ( this.messageCache ) {
+            String message = this.messageCache.get( key );
 
-        if ( message == null ) return "§4Not Found \"" + key + "\"";
-        if ( replacements.length == 0 ) return message;
-        int i = 1;
+            if ( message == null ) return "§4Not Found \"" + key + "\"";
+            if ( replacements.length == 0 ) return message;
+            int i = 1;
 
-        for ( final Object o : replacements ) {
-            message = message.replace( "{" + i + "}", o.toString() );
-            i++;
+            for ( final Object o : replacements ) {
+                message = message.replace( "{" + i + "}", o.toString() );
+                i++;
+            }
+
+            return message;
         }
-
-        return message;
     }
 
     /**
@@ -76,9 +78,11 @@ public class MessageHandler {
      * @return the message list
      */
     public List< String > getList( final String key ) {
-        final List< String > list = this.messageListCache.get( key );
+        synchronized ( this.messageListCache ) {
+            final List< String > list = this.messageListCache.get( key );
 
-        return list == null ? Lists.newArrayList() : list;
+            return list == null ? Lists.newArrayList() : list;
+        }
     }
 
     private YamlConfiguration mkdirs( final Plugin plugin ) {

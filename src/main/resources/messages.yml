@@ -1,1 +1,9 @@
 prefix: "&8[&aTestPlugin&8] &7"
+
+###
+# Scoreboard
+###
+scoreboard:
+  display_name: "&aTest&8-&aScoreboard"
+  lines:
+    - ""

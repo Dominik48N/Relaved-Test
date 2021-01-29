@@ -2,6 +2,7 @@ package net.relaved.test;
 
 import lombok.Getter;
 import net.relaved.test.config.MessageHandler;
+import net.relaved.test.listener.player.PlayerJoinListener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -44,6 +45,8 @@ public class TestPlugin extends JavaPlugin {
     private void registerListeners() {
         final PluginManager pluginManager = this.getServer().getPluginManager();
 
+        // Player listeners
+        pluginManager.registerEvents( new PlayerJoinListener( this ), this );
     }
 
     /**

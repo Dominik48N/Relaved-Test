@@ -1,0 +1,5 @@
+name: Test
+version: 1.0.0
+authors:
+  - Dominik48N
+main: net.relaved.test.TestPlugin
